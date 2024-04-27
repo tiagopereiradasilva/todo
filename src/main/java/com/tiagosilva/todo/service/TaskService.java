@@ -3,6 +3,8 @@ package com.tiagosilva.todo.service;
 import com.tiagosilva.todo.domain.Task;
 import com.tiagosilva.todo.dto.TaskDto;
 import com.tiagosilva.todo.enums.EnumTaskStatus;
+import com.tiagosilva.todo.exceptions.TaskNotFoundException;
+import com.tiagosilva.todo.exceptions.UpdateStatusException;
 import com.tiagosilva.todo.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,7 @@ public class TaskService {
     }
 
     public void update(String id, TaskDto dto) {
-        Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(String.format("Task %s não encontrada", id)));
         task.setTitle(dto.title());
         task.setDescription(dto.description());
         task.setUpdatedAt(LocalDateTime.now());
@@ -45,7 +47,7 @@ public class TaskService {
     }
 
     public void delete(String id) {
-        Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(String.format("Task %s não encontrada", id)));
         taskRepository.delete(task);
     }
 
@@ -59,9 +61,9 @@ public class TaskService {
                                 taskRepository.save(t);
                                 return t;
                             }
-                            throw new NullPointerException();
+                            throw new UpdateStatusException(String.format("Erro ao alterar status %s para %s da Task %s", t.getStatus(), status, id));
                         }
-                ).orElseThrow(NullPointerException::new);
+                ).orElseThrow(() -> new TaskNotFoundException(String.format("Task %s não encontrada", id)));
 
     }
 
