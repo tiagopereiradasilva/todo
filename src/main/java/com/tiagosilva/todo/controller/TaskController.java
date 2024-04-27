@@ -2,6 +2,7 @@ package com.tiagosilva.todo.controller;
 
 import com.tiagosilva.todo.domain.Task;
 import com.tiagosilva.todo.dto.TaskDto;
+import com.tiagosilva.todo.enums.EnumTaskStatus;
 import com.tiagosilva.todo.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,14 +29,20 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> update(@PathVariable("id") String id, @RequestBody TaskDto dto){
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody TaskDto dto){
         taskService.update(id, dto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Task> delete(@PathVariable("id") String id){
+    public ResponseEntity<String> delete(@PathVariable("id") String id){
         taskService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateStatus(@PathVariable("id") String id, @RequestParam("status") EnumTaskStatus status){
+        taskService.updateStatus(id, status);
         return ResponseEntity.noContent().build();
     }
 }

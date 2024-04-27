@@ -48,4 +48,10 @@ public class TaskService {
         Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
         taskRepository.delete(task);
     }
+
+    public void updateStatus(String id, EnumTaskStatus status) {
+        Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
+        task.setStatus(status);
+        taskRepository.save(task);
+    }
 }
