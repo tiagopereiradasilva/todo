@@ -50,8 +50,32 @@ public class TaskService {
     }
 
     public void updateStatus(String id, EnumTaskStatus status) {
-        Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
-        task.setStatus(status);
-        taskRepository.save(task);
+        taskRepository.findById(id)
+                .map(
+                        t -> {
+                            if (validateUpdateStatus(t.getStatus(), status)) {
+                                t.setStatus(status);
+                                t.setUpdatedAt(LocalDateTime.now());
+                                taskRepository.save(t);
+                                return t;
+                            }
+                            throw new NullPointerException();
+                        }
+                ).orElseThrow(NullPointerException::new);
+
+    }
+
+    private boolean validateUpdateStatus(EnumTaskStatus status, EnumTaskStatus statusPassed){
+        switch (status){
+            case BACKLOG, PAUSED -> {
+                return statusPassed == EnumTaskStatus.DOING;
+            }
+            case DOING -> {
+                return statusPassed == EnumTaskStatus.PAUSED || statusPassed == EnumTaskStatus.DONE;
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 }
