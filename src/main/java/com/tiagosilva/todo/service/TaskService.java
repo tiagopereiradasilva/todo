@@ -35,4 +35,17 @@ public class TaskService {
                 .updatedAt(LocalDateTime.now())
                 .build();
     }
+
+    public void update(String id, TaskDto dto) {
+        Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
+        task.setTitle(dto.title());
+        task.setDescription(dto.description());
+        task.setUpdatedAt(LocalDateTime.now());
+        taskRepository.save(task);
+    }
+
+    public void delete(String id) {
+        Task task = taskRepository.findById(id).orElseThrow(NullPointerException::new);
+        taskRepository.delete(task);
+    }
 }
