@@ -23,6 +23,11 @@ public class TaskController {
         return ResponseEntity.ok(taskService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> find(@PathVariable("id") String id){
+        return ResponseEntity.ok(taskService.find(id));
+    }
+
     @PostMapping
     public ResponseEntity<Task> create(@RequestBody TaskDto dto){
         return ResponseEntity.ok(taskService.save(dto));
