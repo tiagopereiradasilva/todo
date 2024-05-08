@@ -1,18 +1,25 @@
 package com.tiagosilva.todo.domain;
 
 import com.tiagosilva.todo.enums.EnumTaskStatus;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@Document(collection = "tasks")
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Task {
-    @Id
+    @Id@GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String title;
     private String description;
